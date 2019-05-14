@@ -1,9 +1,20 @@
 version: '1.0'
+stages:
+  - prepare
+  - build
 steps:
+  main_clone:
+    title: Cloning main repository...
+    stage: prepare
+    type: git-clone
+    repo: 'codefresh-contrib/spring-boot-2-sample-app'
+    revision: multi-stage-docker
+    git: github
   BuildingDockerImage:
     title: Building Docker Image
+    stage: build
     type: build
     image_name: spring-boot-2-sample-app
     working_directory: ./
-    tag: '${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}'
+    tag: 'multi-stage'
     dockerfile: Dockerfile
