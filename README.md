@@ -36,7 +36,7 @@ mvn spring-boot:run
 mvn package
 docker build -t my-spring-boot-sample .
 ```
-
+ 
 
 ## To run the docker image
 
