@@ -4,14 +4,15 @@ stages:
   - test
   - integration
   - build
+  - deploy
 steps:
   main_clone:
     title: Cloning main repository...
     stage: prepare
     type: git-clone
-    repo: 'codefresh-contrib/spring-boot-2-sample-app'
+    repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
     revision: master
-    git: github
+    git: GitHub
   MyUnitTests:
     title: Compile/Unit test
     stage: test
@@ -32,4 +33,18 @@ steps:
     working_directory: ./
     tag: 'non-multi-stage'
     dockerfile: Dockerfile
+  KubernetesCanaryDeployment:
+    title: 'Deploying new version ${{CF_SHORT_REVISION}}'
+    stage: deploy
+    type: k8s-canary-deployment
+    arguments:
+      WORKING_VOLUME: .
+      SERVICE_NAME: '${{SERVICE_NAME}}'
+      DEPLOYMENT_NAME: '${{CF_REPO_NAME}}'
+      TRAFFIC_INCREMENT: '${{TRAFFIC_INCREMENT}}'
+      NEW_VERSION: '${{NEW_VERSION}}'
+      SLEEP_SECONDS: '${{SLEEP_SECONDS}}'
+      NAMESPACE: 'demo-namespace-1'
+      KUBE_CONTEXT: 'demo-cluster-2'
 
+  
